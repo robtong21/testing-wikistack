@@ -36,16 +36,21 @@ router.get('/:userId', function (req, res, next) {
     ])
         // can also be .spread(pages, user)
         .then(function (values) {
-
             var pages = values[0];
             var user = values[1];
 
-            user.pages = pages;
+            if(user){
+                user.pages = pages;
 
-            res.render('userpage', {
-                user: user
-            });
-
+                res.render('userpage', {
+                    user: user
+                });
+            } else {
+                let newErr = new Error('No user found.');
+                newErr.status = 404;
+                // throw newErr;
+                next(newErr);
+            }
         })
         .catch(next);
 
